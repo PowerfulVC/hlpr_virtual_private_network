@@ -5,6 +5,10 @@
 
 package de.blinkt.openvpn.core;
 
+import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_CONNECTED;
+import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT;
+import static de.blinkt.openvpn.core.NetworkSpace.IpAddress;
+
 import android.Manifest.permission;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -64,10 +68,6 @@ import de.blinkt.openvpn.api.ExternalAppDatabase;
 import de.blinkt.openvpn.core.VpnStatus.ByteCountListener;
 import de.blinkt.openvpn.core.VpnStatus.StateListener;
 import de.blinkt.openvpn.utils.TotalTraffic;
-
-import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_CONNECTED;
-import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT;
-import static de.blinkt.openvpn.core.NetworkSpace.IpAddress;
 
 public class OpenVPNService extends VpnService implements StateListener, Callback, ByteCountListener, IOpenVPNServiceInternal {
 
@@ -212,7 +212,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 intent.putExtra(typeStart, typeFromNotify);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             }
         } catch (Exception e) {
             Log.e(this.getClass().getCanonicalName(), "Build detail intent error", e);
@@ -283,7 +283,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId) {
-        if (lastChannel == null || lastChannel.isEmpty()){
+        if (lastChannel == null || lastChannel.isEmpty()) {
             NotificationChannel chan = new NotificationChannel(channelId,
                     getString(R.string.channel_name_background), NotificationManager.IMPORTANCE_NONE);
             chan.setLightColor(Color.BLUE);
@@ -398,6 +398,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         nbuilder.setLocalOnly(true);
 
     }
+
     private int getIconByConnectionStatus(ConnectionStatus level) {
         switch (level) {
             case LEVEL_CONNECTED:
@@ -419,6 +420,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
         }
     }
+
     private boolean runningOnAndroidTV() {
         UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
         return uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
@@ -1297,9 +1299,9 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
             showNotification(netstat, null, NOTIFICATION_CHANNEL_BG_ID, mConnecttime, LEVEL_CONNECTED, null);
             byteIn = String.format("↓%2$s", getString(R.string.statusline_bytecount),
-                    humanReadableByteCount(in,false, getResources())) + " - " + humanReadableByteCount(diffIn / OpenVPNManagement.mBytecountInterval, false, getResources()) + "/s";
+                    humanReadableByteCount(in, false, getResources())) + " - " + humanReadableByteCount(diffIn / OpenVPNManagement.mBytecountInterval, false, getResources()) + "/s";
             byteOut = String.format("↑%2$s", getString(R.string.statusline_bytecount),
-                    humanReadableByteCount(out, false,getResources())) + " - " + humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, false, getResources()) + "/s";
+                    humanReadableByteCount(out, false, getResources())) + " - " + humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, false, getResources()) + "/s";
             time = Calendar.getInstance().getTimeInMillis() - c;
             lastPacketReceive = Integer.parseInt(convertTwoDigit((int) (time / 1000) % 60)) - Integer.parseInt(seconds);
             seconds = convertTwoDigit((int) (time / 1000) % 60);
@@ -1317,6 +1319,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         if (value < 0) return 0;
         else return value;
     }
+
     public String convertTwoDigit(int value) {
         if (value < 10) return "0" + value;
         else return value + "";
@@ -1423,6 +1426,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         this.state = state;
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
+
     //sending message to main activity
     private void sendMessage(String duration, String lastPacketReceive, String byteIn, String byteOut) {
         Intent intent = new Intent("connectionState");
@@ -1432,18 +1436,22 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         intent.putExtra("byteOut", byteOut);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
+
     public class LocalBinder extends Binder {
         public OpenVPNService getService() {
             // Return this instance of LocalService so clients can call public methods
             return OpenVPNService.this;
         }
     }
+
     public static String getStatus() {//it will be call from mainactivity for get current status
         return state;
     }
+
     public static void setDefaultStatus() {
         state = "";
     }
+
     public boolean isConnected() {
         return flag;
     }
