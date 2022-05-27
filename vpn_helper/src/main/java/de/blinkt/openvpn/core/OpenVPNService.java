@@ -1307,6 +1307,12 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             byteOut = String.format("↑%2$s", getString(R.string.statusline_bytecount),
                     humanReadableByteCount(out, false, getResources())) + " - " + humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, false, getResources()) + "/s";
             time = Calendar.getInstance().getTimeInMillis() - c;
+            if (pref != null) {
+                if ((pref.getAllowedTime() - (pref.getUsageTime() + time)) <= 0) {
+                    openvpnStopped();
+                }
+            }
+
             lastPacketReceive = Integer.parseInt(convertTwoDigit((int) (time / 1000) % 60)) - Integer.parseInt(seconds);
             seconds = convertTwoDigit((int) (time / 1000) % 60);
             minutes = convertTwoDigit((int) ((time / (1000 * 60)) % 60));
