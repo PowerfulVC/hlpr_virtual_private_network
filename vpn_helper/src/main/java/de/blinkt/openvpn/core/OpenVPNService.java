@@ -302,7 +302,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     private void showNotification(final String msg, String tickerText, @NonNull String channel,
                                   long when, ConnectionStatus status, Intent intent) {
-        pref = new Pref(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel = createNotificationChannel(channel);
         }
@@ -1452,6 +1451,10 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             // Return this instance of LocalService so clients can call public methods
             return OpenVPNService.this;
         }
+    }
+
+    public static void initPref(Context context){
+        pref = new Pref(context);
     }
 
     public static String getStatus() {//it will be call from mainactivity for get current status
