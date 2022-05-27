@@ -33,7 +33,7 @@ public class Pref {
 
     public Long getAllowedTime() {
         String currentDate = new SimpleDateFormat("dd_MM_yyyy", Locale.getDefault()).format(new Date());
-        return sharedPreferences.getLong(currentDate + "_allowed", 0);
+        return sharedPreferences.getLong(currentDate + "_allowed", 1800000);
     }
 
     public void addAllowedTime(long time) {
