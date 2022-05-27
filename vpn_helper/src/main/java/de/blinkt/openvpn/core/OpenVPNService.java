@@ -62,6 +62,7 @@ import java.util.Vector;
 
 import de.blinkt.openvpn.DisconnectVPNActivity;
 import de.blinkt.openvpn.LaunchVPN;
+import de.blinkt.openvpn.OpenVpnApi;
 import de.blinkt.openvpn.Pref;
 import de.blinkt.openvpn.R;
 import de.blinkt.openvpn.VpnProfile;
@@ -268,6 +269,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     public void endVpnService() {
         pref.setUsageTime(time);
         pref.setStartMillisReset();
+        OpenVpnApi.currentId = -1;
         new Handler().postDelayed(() -> {
             synchronized (mProcessLock) {
                 mProcessThread = null;
