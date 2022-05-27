@@ -10,24 +10,19 @@ import java.util.Locale;
 public class Pref {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private Long notSaved;
+    private Long startMillis = null;
 
     public Pref(Context context) {
         sharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        notSaved = getAllowedTime() - getUsageTime();
     }
 
-    public Long getNotSavedLeftTime() {
-        return notSaved;
+    public void setStartMillis(long millis) {
+        startMillis = System.currentTimeMillis();
     }
 
-    public void setNotSaved(long time) {
-        notSaved = (getAllowedTime() - getUsageTime()) - time;
-    }
-
-    public void resetNotSaved() {
-        notSaved = getAllowedTime() - getUsageTime();
+    public Long getStartMillis() {
+        return startMillis;
     }
 
     public Long getLeft() {
