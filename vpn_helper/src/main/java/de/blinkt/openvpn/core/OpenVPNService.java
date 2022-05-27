@@ -270,6 +270,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             mProcessThread = null;
         }
         pref.setUsageTime(time);
+        pref.resetNotSaved();
         VpnStatus.removeByteCountListener(this);
         unregisterDeviceStateReceiver();
         ProfileManager.setConntectedVpnProfileDisconnected(this);
@@ -1453,7 +1454,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         }
     }
 
-    public static void initPref(Context context){
+    public static void initPref(Context context) {
         pref = new Pref(context);
     }
 
