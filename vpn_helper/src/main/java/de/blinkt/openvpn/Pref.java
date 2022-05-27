@@ -50,4 +50,8 @@ public class Pref {
         editor.putLong(currentDate + "_allowed", getAllowedTime() + time);
         editor.apply();
     }
+
+    public void setStartMillisReset() {
+        startMillis = null;
+    }
 }
