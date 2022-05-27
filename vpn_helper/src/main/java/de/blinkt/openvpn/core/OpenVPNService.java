@@ -266,23 +266,27 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     }
 
     public void endVpnService() {
-        synchronized (mProcessLock) {
-            mProcessThread = null;
-        }
         pref.setUsageTime(time);
         pref.setStartMillisReset();
-        VpnStatus.removeByteCountListener(this);
-        unregisterDeviceStateReceiver();
-        ProfileManager.setConntectedVpnProfileDisconnected(this);
-        mOpenVPNThread = null;
-        if (!mStarting) {
-            stopForeground(!mNotificationAlwaysVisible);
-
-            if (!mNotificationAlwaysVisible) {
-                stopSelf();
-                VpnStatus.removeStateListener(this);
+        new Handler().postDelayed(() -> {
+            synchronized (mProcessLock) {
+                mProcessThread = null;
             }
-        }
+
+            VpnStatus.removeByteCountListener(OpenVPNService.this);
+            unregisterDeviceStateReceiver();
+            ProfileManager.setConntectedVpnProfileDisconnected(OpenVPNService.this);
+            mOpenVPNThread = null;
+            if (!mStarting) {
+                stopForeground(!mNotificationAlwaysVisible);
+
+                if (!mNotificationAlwaysVisible) {
+                    stopSelf();
+                    VpnStatus.removeStateListener(OpenVPNService.this);
+                }
+            }
+        }, 500);
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

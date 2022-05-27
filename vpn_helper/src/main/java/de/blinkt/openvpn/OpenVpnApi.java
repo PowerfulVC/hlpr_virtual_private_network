@@ -15,7 +15,7 @@ import de.blinkt.openvpn.core.ProfileManager;
 import de.blinkt.openvpn.core.VPNLaunchHelper;
 
 public class OpenVpnApi {
-    public static int currentId = 0;
+    public static int currentId = -1;
     private static final String TAG = "OpenVpnApi";
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
