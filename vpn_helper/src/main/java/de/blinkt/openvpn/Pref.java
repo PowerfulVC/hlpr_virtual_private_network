@@ -2,6 +2,7 @@ package de.blinkt.openvpn;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +36,7 @@ public class Pref {
     }
 
     public void setUsageTime(long time) {
+        Log.e("Info", "Set usage time:" + time);
         String currentDate = new SimpleDateFormat("dd_MM_yyyy", Locale.getDefault()).format(new Date());
         editor.putLong(currentDate + "_usage", getUsageTime() + time);
         editor.apply();
