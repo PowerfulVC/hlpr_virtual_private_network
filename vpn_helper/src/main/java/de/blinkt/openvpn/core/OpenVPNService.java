@@ -1311,7 +1311,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 if ((pref.getAllowedTime() - (pref.getUsageTime() + time)) <= 0) {
                     openvpnStopped();
                 }
-                pref.setNotSaved(time);
             }
 
             lastPacketReceive = Integer.parseInt(convertTwoDigit((int) (time / 1000) % 60)) - Integer.parseInt(seconds);

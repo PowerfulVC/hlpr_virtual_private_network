@@ -17,7 +17,7 @@ public class Pref {
         editor = sharedPreferences.edit();
     }
 
-    public void setStartMillis(long millis) {
+    public void setStartMillis() {
         startMillis = System.currentTimeMillis();
     }
 
