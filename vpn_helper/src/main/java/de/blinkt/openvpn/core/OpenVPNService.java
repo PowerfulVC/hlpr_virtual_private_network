@@ -442,7 +442,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         intentWithData.setAction(DISCONNECT_VPN);
 
 
-        PendingIntent disconnectPendingIntent = PendingIntent.getActivity(this, 0, intentWithData, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent disconnectPendingIntent = PendingIntent.getBroadcast(this, 0, intentWithData, PendingIntent.FLAG_IMMUTABLE);
 
         nbuilder.addAction(R.drawable.ic_menu_close_clear_cancel,
                 getString(R.string.cancel_connection), disconnectPendingIntent);
