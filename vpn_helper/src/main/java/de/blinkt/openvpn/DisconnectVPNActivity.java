@@ -50,14 +50,7 @@ public class DisconnectVPNActivity extends Activity implements DialogInterface.O
     }
 
     private void showDisconnectDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_cancel);
-        builder.setMessage(R.string.cancel_connection_query);
-        builder.setNegativeButton(android.R.string.no, this);
-        builder.setPositiveButton(android.R.string.yes, this);
-        builder.setOnCancelListener(this);
-        builder.show();
+        stopVpn();
     }
 
     @Override
