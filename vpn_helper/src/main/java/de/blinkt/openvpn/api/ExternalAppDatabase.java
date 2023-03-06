@@ -54,10 +54,15 @@ public class ExternalAppDatabase {
 		SharedPreferences prefs = Preferences.getDefaultSharedPreferences(mContext);
 		Editor prefedit = prefs.edit();
 
+		// Workaround for bug
 		prefedit.putStringSet(PREFERENCES_KEY, allowedapps);
 		int counter = prefs.getInt("counter", 0);
 		prefedit.putInt("counter", counter + 1);
 		prefedit.apply();
+	}
+	
+	public void clearAllApiApps() {
+		saveExtAppList(new HashSet<String>());
 	}
 
 	public void removeApp(String packagename) {
@@ -67,7 +72,7 @@ public class ExternalAppDatabase {
 	}
 
 
-	public String checkOpenVPNPermission(PackageManager pm) {
+	public String checkOpenVPNPermission(PackageManager pm) throws SecurityRemoteException {
 
 		for (String appPackage : getExtAppList()) {
 			ApplicationInfo app;

@@ -5,6 +5,7 @@
 
 package de.blinkt.openvpn.core;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -40,7 +41,7 @@ public class VpnStatus {
     private static HandlerThread mHandlerThread;
 
     private static String mLastConnectedVPNUUID;
-    static boolean readFileLog = false;
+    static boolean readFileLog =false;
     final static java.lang.Object readFileLock = new Object();
 
 
@@ -130,18 +131,19 @@ public class VpnStatus {
     }
 
     public static void flushLog() {
-        if (mLogFileHandler != null)
+        if (mLogFileHandler!=null)
             mLogFileHandler.sendEmptyMessage(LogFileHandler.FLUSH_TO_DISK);
     }
 
     public static void setConnectedVPNProfile(String uuid) {
         mLastConnectedVPNUUID = uuid;
-        for (StateListener sl : stateListener)
+        for (StateListener sl: stateListener)
             sl.setConnectedVPN(uuid);
     }
 
 
-    public static String getLastConnectedVPNProfile() {
+    public static String getLastConnectedVPNProfile()
+    {
         return mLastConnectedVPNUUID;
     }
 
@@ -257,7 +259,7 @@ public class VpnStatus {
 
     public synchronized static void addByteCountListener(ByteCountListener bcl) {
         TrafficHistory.LastDiff diff = trafficHistory.getLastDiff(null);
-        bcl.updateByteCount(diff.getIn(), diff.getOut(), diff.getDiffIn(), diff.getDiffOut());
+        bcl.updateByteCount(diff.getIn(), diff.getOut(), diff.getDiffIn(),diff.getDiffOut());
         byteCountListener.add(bcl);
     }
 
@@ -373,7 +375,8 @@ public class VpnStatus {
         updateStateString(state, msg, rid, level);
     }
 
-    public synchronized static void updateStateString(String state, String msg, int resid, ConnectionStatus level) {
+    public synchronized static void updateStateString(String state, String msg, int resid, ConnectionStatus level)
+    {
         updateStateString(state, msg, resid, level, null);
     }
 
@@ -474,14 +477,9 @@ public class VpnStatus {
 
     public static synchronized void updateByteCount(long in, long out) {
         TrafficHistory.LastDiff diff = trafficHistory.add(in, out);
-        try {
-            for (ByteCountListener bcl : byteCountListener) {
-                bcl.updateByteCount(in, out, diff.getDiffIn(), diff.getDiffOut());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        for (ByteCountListener bcl : byteCountListener) {
+            bcl.updateByteCount(in, out, diff.getDiffIn(), diff.getDiffOut());
         }
-
-
     }
 }

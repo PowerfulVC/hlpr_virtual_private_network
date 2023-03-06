@@ -63,6 +63,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
             mService = (IOpenVPNServiceInternal) (service);
         }
 
@@ -131,6 +132,8 @@ public class ExternalOpenVPNService extends Service implements StateListener {
         private void startProfile(VpnProfile vp)
         {
             Intent vpnPermissionIntent = VpnService.prepare(ExternalOpenVPNService.this);
+            /* Check if we need to show the confirmation dialog,
+             * Check if we need to ask for username/password */
 
             int neddPassword = vp.needUserPWInput(null, null);
 
@@ -170,6 +173,11 @@ public class ExternalOpenVPNService extends Service implements StateListener {
                     throw new RemoteException(getString(vp.checkProfile(getApplicationContext())));
 
                 vp.mProfileCreator = callingApp;
+
+                /*int needpw = vp.needUserPWInput(false);
+                if(needpw !=0)
+                    throw new RemoteException("The inline file would require user input: " + getString(needpw));
+                    */
 
                 ProfileManager.setTemporaryProfile(ExternalOpenVPNService.this, vp);
 

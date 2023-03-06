@@ -131,7 +131,6 @@ public class VPNLaunchHelper {
 
 
     public static void startOpenVpn(VpnProfile startprofile, Context context) {
-        OpenVPNService.pref.setStartMillis();
         Intent startVPN = startprofile.prepareStartService(context);
         if (startVPN != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
